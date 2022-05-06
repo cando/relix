@@ -15,7 +15,7 @@ defmodule Relix.Recipe do
 
   @type recipe_state :: :approved | :draft
 
-  @spec new(String.t(), String.t(), map()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
+  @spec new(String.t(), String.t(), map()) :: {:ok, %Relix.Recipe{}} | {:error, any()}
   def new(name, type, items \\ %{}) do
     with :ok <- validate_name(name),
          :ok <- validate_type(type) do
@@ -29,7 +29,7 @@ defmodule Relix.Recipe do
     %Relix.Recipe{recipe | state: @approved}
   end
 
-  @spec add_or_update_item(Relix.Recipe.t(), String.t(), any()) :: Relix.Recipe.t()
+  @spec add_or_update_item(%Relix.Recipe{}, String.t(), any()) :: %Relix.Recipe{}
   def add_or_update_item(recipe, item_key, item_value) do
     %Relix.Recipe{
       recipe
@@ -39,9 +39,11 @@ defmodule Relix.Recipe do
     }
   end
 
+  @spec validate_name(String.t()) :: :ok | :validation_error
   defp validate_name(name),
     do: if(name != nil && String.length(name) > 0, do: :ok, else: :validation_error)
 
+  @spec validate_type(String.t()) :: :ok | :validation_error
   defp validate_type(type),
     do: if(type != nil && String.length(type) > 0, do: :ok, else: :validation_error)
 
