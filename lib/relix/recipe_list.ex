@@ -15,8 +15,16 @@ defmodule Relix.RecipeList do
     GenServer.call(recipe_list, {:delete, id})
   end
 
+  def get(recipe_list, recipe_id) do
+    GenServer.call(recipe_list, {:get, recipe_id})
+  end
+
+  def update(recipe_list, recipe_id, new_recipe) do
+    GenServer.call(recipe_list, {:update, {recipe_id, new_recipe}})
+  end
+
   def get_recipes(recipe_list) do
-    GenServer.call(recipe_list, :get)
+    GenServer.call(recipe_list, :get_all)
   end
 
   @impl GenServer
@@ -46,5 +54,16 @@ defmodule Relix.RecipeList do
   end
 
   @impl GenServer
-  def handle_call(:get, _, {_, recipes} = state), do: {:reply, recipes |> Map.values(), state}
+  def handle_call(:get_all, _, {_, recipes} = state), do: {:reply, recipes |> Map.values(), state}
+
+  @impl GenServer
+  def handle_call({:get, recipe_id}, _, {_, recipes} = state), do: {:reply, Map.get(recipes, recipe_id, :not_found), state}
+
+  @impl GenServer
+  def handle_call({:update, {recipe_id, new_recipe}}, _, {id, recipes} = state) do
+    case Map.fetch(recipes, recipe_id) do
+      {:ok, _} -> {:reply, :ok, {id, Map.put(recipes, recipe_id, %Recipe{new_recipe | id: recipe_id})}}
+      _ -> {:reply, :not_found, state}
+    end
+  end
 end

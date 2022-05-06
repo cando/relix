@@ -50,4 +50,23 @@ defmodule Relix.RecipeListTest do
              }
            ]
   end
+
+  test "get by id" do
+    {:ok, pid} = Relix.RecipeList.start_link("test1")
+    recipe = Relix.RecipeList.new(pid, "Recipe1", "RECIPE", %{1 => 2})
+
+    assert Relix.RecipeList.get(pid, recipe.id) == recipe
+    assert Relix.RecipeList.get(pid, 42) == :not_found
+  end
+
+  test "update" do
+    {:ok, pid} = Relix.RecipeList.start_link("test1")
+    recipe = Relix.RecipeList.new(pid, "Recipe1", "RECIPE", %{1 => 2})
+
+    :ok = Relix.RecipeList.update(pid, recipe.id, %Recipe{recipe | name: "RecipeNuova"})
+
+    assert Relix.RecipeList.get(pid, recipe.id).name == "RecipeNuova"
+    assert Relix.RecipeList.get(pid, recipe.id).type == "RECIPE"
+    assert Relix.RecipeList.get(pid, recipe.id).items == %{1 => 2}
+  end
 end
