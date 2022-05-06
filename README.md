@@ -1,6 +1,6 @@
 # Relix
 
-**TODO: Add description**
+A simple SQL-backed recipe manager system.
 
 ## Installation
 
