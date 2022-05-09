@@ -23,6 +23,8 @@ defmodule Relix.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ecto_sql, "~> 3.0"},
+      {:myxql, "~> 0.6.0"},
       {:mox, "~> 1.0", only: :test}
     ]
   end

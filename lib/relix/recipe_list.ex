@@ -1,14 +1,17 @@
 defmodule Relix.RecipeList do
+  use Supervisor
+
   alias Relix.Recipe
 
-  @spec new_recipe(String.t(), String.t(), map) :: {:error, :validation_error} | {:ok, Relix.Recipe.t()}
+  @spec new_recipe(String.t(), String.t(), map) ::
+          {:error, :validation_error} | {:ok, Relix.Recipe.t()}
   def new_recipe(name, type, items) do
-    repo = get_recipe_repository()
-    new_id = repo.get_next_identity()
+    store = get_recipe_store()
+    new_id = store.get_next_identity()
 
     case Recipe.new(new_id, name, type, items) do
       {:ok, new_recipe} ->
-        :ok = repo.save(new_recipe)
+        :ok = store.save(new_recipe)
         {:ok, new_recipe}
 
       {:error, error} ->
@@ -20,7 +23,7 @@ defmodule Relix.RecipeList do
   def delete_recipe(recipe_id) do
     case get_recipe_by_id(recipe_id) do
       :not_found -> :not_found
-      _ -> get_recipe_repository().delete_by_id(recipe_id)
+      _ -> get_recipe_store().delete_by_id(recipe_id)
     end
   end
 
@@ -35,16 +38,32 @@ defmodule Relix.RecipeList do
   def update_recipe(recipe) do
     case get_recipe_by_id(recipe.id) do
       :not_found -> :not_found
-      _ -> get_recipe_repository().update(recipe)
+      _ -> get_recipe_store().update(recipe)
     end
   end
 
   @spec get_recipes :: [%Recipe{}]
   def get_recipes() do
-    get_recipe_repository().get_recipes()
+    get_recipe_store().get_recipes()
   end
 
-  defp get_recipe_repository() do
+  def start_link(init_arg) do
+    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+  end
+
+  @impl true
+  def init(_init_arg) do
+
+    children = if Mix.env() == :test,
+      do: [],
+      else: [
+        Relix.RecipeStore.Supervisor
+      ]
+
+    Supervisor.init(children, strategy: :one_for_one)
+  end
+
+  defp get_recipe_store() do
     Application.get_env(:relix, :recipe_repo)
   end
 end

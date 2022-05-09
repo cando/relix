@@ -1,4 +1,4 @@
-defmodule Relix.Behaviour.RecipeRepo do
+defmodule Relix.RecipeStore.Behaviour do
   @callback get_recipes() :: [%Relix.Recipe{}]
   @callback save(recipe :: %Relix.Recipe{}) :: :ok
   @callback get_next_identity() :: any()

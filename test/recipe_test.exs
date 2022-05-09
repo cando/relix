@@ -5,6 +5,7 @@ defmodule RecipeTest do
   alias Relix.Recipe
 
   @draft :draft
+  @approved :approved
 
   test "create recipe" do
     assert Recipe.new(1, "Recipe1", "RECIPE", %{}) |> elem(1) == %Recipe{
@@ -35,6 +36,17 @@ defmodule RecipeTest do
   test "create recipe with invalid type" do
     assert Recipe.new(1, "Recipe 1", "", %{}) |> elem(1) == :validation_error
     assert Recipe.new(1, "Recipe 1", nil, %{}) |> elem(1) == :validation_error
+  end
+
+  test "approve recipe" do
+    recipe1 = Recipe.new(1, "Recipe1", "RECIPE", %{"pippo" => "pluto"}) |> elem(1)
+    assert recipe1.state == @draft
+    assert recipe1.version == 1
+
+    recipe1 = Recipe.approve(recipe1)
+
+    assert recipe1.state == @approved
+    assert recipe1.version == 1
   end
 
   test "add item" do
