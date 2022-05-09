@@ -1,72 +1,77 @@
 defmodule Relix.RecipeListTest do
+  import Mox
   use ExUnit.Case, async: true
   doctest Relix
+  setup :verify_on_exit!
 
   alias Relix.Recipe
 
-  test "new recipe" do
-    {:ok, pid} = Relix.RecipeList.start_link("test1")
-
-    assert Relix.RecipeList.new(pid, "Recipe1", "RECIPE", %{1 => 2}) ==
-              %Recipe{
-                id: 1,
-                name: "Recipe1",
-                type: "RECIPE",
-                state: :draft,
-                version: 1,
-                items: %{1 => 2}
-              }
-
-    assert Relix.RecipeList.get_recipes(pid) |> length() == 1
-    assert Relix.RecipeList.new(pid, nil, "RECIPE", %{1 => 2}) == :validation_error
-    assert Relix.RecipeList.get_recipes(pid) |> length() == 1
+  setup_all _ do
+    Mox.defmock(RecipeRepoBehaviourMock, for: Relix.Behaviour.RecipeRepo)
+    Application.put_env(:relix, :recipe_repo, RecipeRepoBehaviourMock)
   end
 
-  test "delete recipe" do
-    {:ok, pid} = Relix.RecipeList.start_link("test1")
+  describe "manage recipes" do
+    test "new recipe" do
+      RecipeRepoBehaviourMock
+      |> expect(:get_next_identity, 2, fn -> 1 end)
+      |> expect(:save, 1, fn _ -> :ok end)
 
-    recipe = Relix.RecipeList.new(pid, "Recipe1", "RECIPE", %{1 => 2})
+      assert Relix.RecipeList.new("Recipe1", "RECIPE", %{1 => 2}) |> elem(1) ==
+               %Recipe{
+                 id: 1,
+                 name: "Recipe1",
+                 type: "RECIPE",
+                 state: :draft,
+                 version: 1,
+                 items: %{1 => 2}
+               }
 
-    assert Relix.RecipeList.delete(pid, recipe.id) == :ok
-    assert Relix.RecipeList.get_recipes(pid) |> length() == 0
-    assert Relix.RecipeList.delete(pid, recipe.id) == :not_found
-  end
+      assert Relix.RecipeList.new(nil, "RECIPE", %{1 => 2}) == {:error, :validation_error}
+    end
 
-  test "get recipes" do
-    {:ok, pid} = Relix.RecipeList.start_link("test1")
+    test "delete recipe" do
+      Mox.stub_with(RecipeRepoBehaviourMock, Relix.StubRecipeRepo)
 
-    assert Relix.RecipeList.get_recipes(pid) == []
+      assert Relix.RecipeList.delete(1) == :ok
+      assert Relix.RecipeList.delete(42) == :not_found
+    end
 
-    Relix.RecipeList.new(pid, "Recipe1", "RECIPE", %{1 => 2})
+    test "get recipes" do
+      Mox.stub_with(RecipeRepoBehaviourMock, Relix.StubRecipeRepo)
 
-    assert Relix.RecipeList.get_recipes(pid) == [
-             %Recipe{
-               id: 1,
-               name: "Recipe1",
-               type: "RECIPE",
-               state: :draft,
-               version: 1,
-               items: %{1 => 2}
-             }
-           ]
-  end
+      assert Relix.RecipeList.get_recipes() == [
+               %Recipe{
+                 id: 1,
+                 name: "Recipe1",
+                 type: "RECIPE",
+                 state: :draft,
+                 version: 1,
+                 items: %{1 => 2}
+               }
+             ]
+    end
 
-  test "get by id" do
-    {:ok, pid} = Relix.RecipeList.start_link("test1")
-    recipe = Relix.RecipeList.new(pid, "Recipe1", "RECIPE", %{1 => 2})
+    test "get by id" do
+      Mox.stub_with(RecipeRepoBehaviourMock, Relix.StubRecipeRepo)
 
-    assert Relix.RecipeList.get(pid, recipe.id) == recipe
-    assert Relix.RecipeList.get(pid, 42) == :not_found
-  end
+      recipe = Relix.RecipeList.new("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
+      stub(RecipeRepoBehaviourMock, :get_recipes, fn -> [recipe] end)
 
-  test "update" do
-    {:ok, pid} = Relix.RecipeList.start_link("test1")
-    recipe = Relix.RecipeList.new(pid, "Recipe1", "RECIPE", %{1 => 2})
+      assert Relix.RecipeList.get_by_id(recipe.id) == recipe
+      assert Relix.RecipeList.get_by_id(42) == :not_found
+    end
 
-    :ok = Relix.RecipeList.update(pid, recipe.id, %Recipe{recipe | name: "RecipeNuova"})
+    test "update" do
+      Mox.stub_with(RecipeRepoBehaviourMock, Relix.StubRecipeRepo)
 
-    assert Relix.RecipeList.get(pid, recipe.id).name == "RecipeNuova"
-    assert Relix.RecipeList.get(pid, recipe.id).type == "RECIPE"
-    assert Relix.RecipeList.get(pid, recipe.id).items == %{1 => 2}
+      recipe = Relix.RecipeList.new("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
+
+      stub(RecipeRepoBehaviourMock, :get_recipes, fn -> [recipe] end)
+
+      assert Relix.RecipeList.update(%Recipe{recipe | name: "RecipeNuova"}) == :ok
+      assert Relix.RecipeList.update(%Recipe{recipe | id: :fake, name: "RecipeNuova"}) ==
+               :not_found
+    end
   end
 end

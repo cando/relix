@@ -1,69 +1,49 @@
 defmodule Relix.RecipeList do
-  use GenServer
-
   alias Relix.Recipe
 
-  def start_link(identifier) do
-    GenServer.start_link(__MODULE__, identifier)
-  end
+  @spec new(String.t(), String.t(), map) :: {:error, :validation_error} | {:ok, Relix.Recipe.t()}
+  def new(name, type, items) do
+    repo = get_recipe_repository()
+    new_id = repo.get_next_identity()
 
-  def new(recipe_list, name, type, items) do
-    GenServer.call(recipe_list, {:new, {name, type, items}})
-  end
-
-  def delete(recipe_list, id) do
-    GenServer.call(recipe_list, {:delete, id})
-  end
-
-  def get(recipe_list, recipe_id) do
-    GenServer.call(recipe_list, {:get, recipe_id})
-  end
-
-  def update(recipe_list, recipe_id, new_recipe) do
-    GenServer.call(recipe_list, {:update, {recipe_id, new_recipe}})
-  end
-
-  def get_recipes(recipe_list) do
-    GenServer.call(recipe_list, :get_all)
-  end
-
-  @impl GenServer
-  @spec init(any) :: {:ok, {integer(), map}}
-  def init(_identifier) do
-    {:ok, {1, %{}}}
-  end
-
-  @impl GenServer
-  def handle_call({:new, {name, type, items}}, _, {id, recipes} = state) do
-    case Recipe.new(name, type, items) do
+    case Recipe.new(new_id, name, type, items) do
       {:ok, new_recipe} ->
-        new_with_id = %Recipe{new_recipe | id: id}
-        {:reply, new_with_id, {id + 1, Map.put(recipes, id, new_with_id)}}
+        :ok = repo.save(new_recipe)
+        {:ok, new_recipe}
 
       {:error, error} ->
-        {:reply, error, state}
+        {:error, error}
     end
   end
 
-  @impl GenServer
-  def handle_call({:delete, recipe_id}, _, {id, recipes} = state) do
-    case Map.fetch(recipes, recipe_id) do
-      {:ok, found_recipe} -> {:reply, :ok, {id, Map.delete(recipes, found_recipe.id)}}
-      _ -> {:reply, :not_found, state}
+  @spec delete(any) :: :ok
+  def delete(recipe_id) do
+    case get_by_id(recipe_id) do
+      :not_found -> :not_found
+      _ -> get_recipe_repository().delete_by_id(recipe_id)
     end
   end
 
-  @impl GenServer
-  def handle_call(:get_all, _, {_, recipes} = state), do: {:reply, recipes |> Map.values(), state}
+  @spec get_by_id(any()) :: %Recipe{} | :not_found
+  def get_by_id(recipe_id) do
+    get_recipes()
+    |> Enum.filter(&(&1.id == recipe_id))
+    |> List.first(:not_found)
+  end
 
-  @impl GenServer
-  def handle_call({:get, recipe_id}, _, {_, recipes} = state), do: {:reply, Map.get(recipes, recipe_id, :not_found), state}
-
-  @impl GenServer
-  def handle_call({:update, {recipe_id, new_recipe}}, _, {id, recipes} = state) do
-    case Map.fetch(recipes, recipe_id) do
-      {:ok, _} -> {:reply, :ok, {id, Map.put(recipes, recipe_id, %Recipe{new_recipe | id: recipe_id})}}
-      _ -> {:reply, :not_found, state}
+  def update(recipe) do
+    case get_by_id(recipe.id) do
+      :not_found -> :not_found
+      _ -> get_recipe_repository().update(recipe)
     end
+  end
+
+  @spec get_recipes :: [%Recipe{}]
+  def get_recipes() do
+    get_recipe_repository().get_recipes()
+  end
+
+  defp get_recipe_repository() do
+    Application.get_env(:relix, :recipe_repo)
   end
 end

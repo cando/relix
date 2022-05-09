@@ -1,5 +1,5 @@
 defmodule Relix.Recipe do
-  defstruct [:id, :name, :type, :state, version: 1, items: %{}]
+  defstruct [:id, :name, :type, :state, :version, items: %{}]
 
   @type t :: %__MODULE__{
           id: integer(),
@@ -15,11 +15,12 @@ defmodule Relix.Recipe do
 
   @type recipe_state :: :approved | :draft
 
-  @spec new(String.t(), String.t(), map()) :: {:ok, %Relix.Recipe{}} | {:error, any()}
-  def new(name, type, items \\ %{}) do
+  @spec new(any(), String.t(), String.t(), map()) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  def new(id, name, type, items \\ %{}) do
     with :ok <- validate_name(name),
          :ok <- validate_type(type) do
-      {:ok, %Relix.Recipe{name: name, type: type, state: @draft, items: items}}
+      {:ok,
+       %Relix.Recipe{id: id, name: name, type: type, state: @draft, version: 1, items: items}}
     else
       :validation_error -> {:error, :validation_error}
     end
