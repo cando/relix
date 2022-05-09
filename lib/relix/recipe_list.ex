@@ -1,8 +1,8 @@
 defmodule Relix.RecipeList do
   alias Relix.Recipe
 
-  @spec new(String.t(), String.t(), map) :: {:error, :validation_error} | {:ok, Relix.Recipe.t()}
-  def new(name, type, items) do
+  @spec new_recipe(String.t(), String.t(), map) :: {:error, :validation_error} | {:ok, Relix.Recipe.t()}
+  def new_recipe(name, type, items) do
     repo = get_recipe_repository()
     new_id = repo.get_next_identity()
 
@@ -16,23 +16,24 @@ defmodule Relix.RecipeList do
     end
   end
 
-  @spec delete(any) :: :ok
-  def delete(recipe_id) do
-    case get_by_id(recipe_id) do
+  @spec delete_recipe(any) :: :ok
+  def delete_recipe(recipe_id) do
+    case get_recipe_by_id(recipe_id) do
       :not_found -> :not_found
       _ -> get_recipe_repository().delete_by_id(recipe_id)
     end
   end
 
-  @spec get_by_id(any()) :: %Recipe{} | :not_found
-  def get_by_id(recipe_id) do
+  @spec get_recipe_by_id(any()) :: %Recipe{} | :not_found
+  def get_recipe_by_id(recipe_id) do
     get_recipes()
     |> Enum.filter(&(&1.id == recipe_id))
     |> List.first(:not_found)
   end
 
-  def update(recipe) do
-    case get_by_id(recipe.id) do
+  @spec update_recipe(%Recipe{}) :: :ok | :not_found
+  def update_recipe(recipe) do
+    case get_recipe_by_id(recipe.id) do
       :not_found -> :not_found
       _ -> get_recipe_repository().update(recipe)
     end
