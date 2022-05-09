@@ -5,11 +5,10 @@ defmodule Relix.Application do
 
   use Application
 
-
   @impl true
   def start(_type, _args) do
     children = [
-      Relix.RecipeList
+      Relix.RecipeStore.PostgresStore.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

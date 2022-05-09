@@ -1,6 +1,4 @@
 defmodule Relix.RecipeList do
-  use Supervisor
-
   alias Relix.Recipe
 
   @spec new_recipe(String.t(), String.t(), map) ::
@@ -45,22 +43,6 @@ defmodule Relix.RecipeList do
   @spec get_recipes :: [%Recipe{}]
   def get_recipes() do
     get_recipe_store().get_recipes()
-  end
-
-  def start_link(init_arg) do
-    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
-  end
-
-  @impl true
-  def init(_init_arg) do
-
-    children = if Mix.env() == :test,
-      do: [],
-      else: [
-        Relix.RecipeStore.Supervisor
-      ]
-
-    Supervisor.init(children, strategy: :one_for_one)
   end
 
   defp get_recipe_store() do
