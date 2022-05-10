@@ -7,13 +7,9 @@ defmodule Relix.RecipeList do
     store = get_recipe_store()
     new_id = store.get_next_identity()
 
-    case Recipe.new(new_id, name, type, items) do
-      {:ok, new_recipe} ->
-        :ok = store.save(new_recipe)
-        {:ok, new_recipe}
-
-      {:error, error} ->
-        {:error, error}
+    with {:ok, new_recipe} <- Recipe.new(new_id, name, type, items),
+         {:ok, db_recipe} <- store.save(new_recipe) do
+      {:ok, db_recipe}
     end
   end
 
@@ -36,7 +32,7 @@ defmodule Relix.RecipeList do
   def update_recipe(recipe) do
     case get_recipe_by_id(recipe.id) do
       :not_found -> :not_found
-      _ -> get_recipe_store().update(recipe)
+      _ -> get_recipe_store().save(recipe)
     end
   end
 

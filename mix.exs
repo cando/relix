@@ -9,7 +9,10 @@ defmodule Relix.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      aliases: aliases()
+      aliases: aliases(),
+      preferred_cli_env: [
+        "test.integration": :test
+      ]
     ]
   end
 
@@ -26,13 +29,19 @@ defmodule Relix.MixProject do
     [
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:mox, "~> 1.0", only: :test}
+      {:mox, "~> 1.0", only: :test},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 
   defp aliases do
     [
-      "test.integration": ["ecto.create --quiet", "ecto.migrate", "test"]
+      "test.integration": [
+        "ecto.drop --quiet",
+        "ecto.create --quiet",
+        "ecto.migrate --quiet",
+        "test --include database"
+      ]
     ]
   end
 

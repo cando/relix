@@ -12,7 +12,7 @@ defmodule Relix.RecipeRepoCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Relix.RecipeStore.PostgressStore.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Relix.RecipeStore.PostgresStore.Repo)
 
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(Relix.RecipeStore.PostgresStore.Repo, {:shared, self()})

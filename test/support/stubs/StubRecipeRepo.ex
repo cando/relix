@@ -17,13 +17,8 @@ defmodule Relix.StubRecipeStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
-  def save(_recipe) do
-    :ok
-  end
-
-  @impl Relix.RecipeStore.Behaviour
-  def update(_recipe) do
-    :ok
+  def save(recipe) do
+    {:ok, recipe}
   end
 
   @impl Relix.RecipeStore.Behaviour
