@@ -8,6 +8,11 @@ defmodule Relix.RecipeStore.PostgresStore.DomainMapper do
     recipe
     |> Map.from_struct()
     |> Map.take([:id, :name, :type, :version, :state, :items])
+    |> Map.update(:items, [], fn items ->
+      Enum.into(items, %{}, fn %PostgresStore.RecipeItem{name: name, value: value} ->
+        {name, value}
+      end)
+    end)
     |> (&struct!(Relix.Recipe, &1)).()
   end
 end

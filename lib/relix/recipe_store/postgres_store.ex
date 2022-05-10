@@ -8,7 +8,7 @@ defmodule Relix.RecipeStore.PostgresStore do
   @spec save(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
   def save(recipe) do
     %PostgresStore.Recipe{}
-    |> PostgresStore.Recipe.save_changeset(recipe |> Map.from_struct())
+    |> PostgresStore.Recipe.changeset(domain_recipe_to_postgres(recipe))
     |> PostgresStore.Repo.insert()
     |> case do
       {:ok, %PostgresStore.Recipe{} = recipe} ->
@@ -30,10 +30,7 @@ defmodule Relix.RecipeStore.PostgresStore do
   @impl Relix.RecipeStore.Behaviour
   @spec get_recipes() :: [%Relix.Recipe{}]
   def get_recipes() do
-    query =
-      from(r in PostgresStore.Recipe,
-        select: r
-      )
+    query = from(r in PostgresStore.Recipe, preload: [:items])
 
     PostgresStore.Repo.all(query) |> Enum.map(&PostgresStore.DomainMapper.to_domain_recipe/1)
   end
@@ -56,5 +53,13 @@ defmodule Relix.RecipeStore.PostgresStore do
             {:error, changeset}
         end
     end
+  end
+
+  defp domain_recipe_to_postgres(recipe) do
+    recipe
+    |> Map.from_struct()
+    |> Map.update(:items, [], fn items ->
+      Enum.map(items, fn {k, v} -> %{name: k, value: v} end)
+    end)
   end
 end

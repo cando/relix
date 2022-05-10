@@ -52,7 +52,7 @@ defmodule Relix.RecipeListTest do
              ]
     end
 
-    test "get by id" do
+    test "get recipe by id" do
       Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
@@ -62,14 +62,15 @@ defmodule Relix.RecipeListTest do
       assert Relix.RecipeList.get_recipe_by_id(42) == :not_found
     end
 
-    test "update" do
+    test "update recipe" do
       Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
 
       stub(RecipeStoreBehaviourMock, :get_recipes, fn -> [recipe] end)
 
-      assert Relix.RecipeList.update_recipe(%Recipe{recipe | name: "RecipeNuova"}) == {:ok, %Recipe{recipe | name: "RecipeNuova"}}
+      assert Relix.RecipeList.update_recipe(%Recipe{recipe | name: "RecipeNuova"}) ==
+               {:ok, %Recipe{recipe | name: "RecipeNuova"}}
 
       assert Relix.RecipeList.update_recipe(%Recipe{recipe | id: :fake, name: "RecipeNuova"}) ==
                :not_found

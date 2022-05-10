@@ -6,13 +6,15 @@ defmodule Relix.PostegresRecipeStoreIntegrationTest do
 
   @tag :database
   test "create recipe" do
-    {:ok, persisted} = PostgresStore.save(Recipe.new(1, "Recipe1", "RECIPE", %{}) |> elem(1))
+    {:ok, persisted} =
+      PostgresStore.save(Recipe.new(1, "Recipe1", "RECIPE", %{"1" => "2"}) |> elem(1))
+
     assert persisted.id == 1
     assert persisted.name == "Recipe1"
     assert persisted.type == "RECIPE"
     assert persisted.version == 1
     assert persisted.state == :draft
-    assert persisted.items == %{}
+    assert persisted.items == %{"1" => "2"}
   end
 
   @tag :database
