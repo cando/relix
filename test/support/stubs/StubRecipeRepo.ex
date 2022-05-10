@@ -8,7 +8,7 @@ defmodule Relix.StubRecipeStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
-  def save(recipe) do
+  def insert(recipe) do
     {:ok, recipe}
   end
 
@@ -25,5 +25,10 @@ defmodule Relix.StubRecipeStore do
   @impl Relix.RecipeStore.Behaviour
   def delete_by_id(_id) do
     :ok
+  end
+
+  @impl Relix.RecipeStore.Behaviour
+  def update(recipe) do
+    {:ok, recipe}
   end
 end

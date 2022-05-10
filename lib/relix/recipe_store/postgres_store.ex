@@ -5,11 +5,25 @@ defmodule Relix.RecipeStore.PostgresStore do
   alias Relix.RecipeStore.PostgresStore
 
   @impl Relix.RecipeStore.Behaviour
-  @spec save(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
-  def save(recipe) do
+  @spec insert(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  def insert(recipe) do
     %PostgresStore.Recipe{}
     |> PostgresStore.Recipe.changeset(domain_recipe_to_postgres(recipe))
     |> PostgresStore.Repo.insert()
+    |> case do
+      {:ok, %PostgresStore.Recipe{} = recipe} ->
+        {:ok, PostgresStore.DomainMapper.to_domain_recipe(recipe)}
+
+      {:error, %Ecto.Changeset{errors: errors}} ->
+        {:error, errors}
+    end
+  end
+
+  @impl Relix.RecipeStore.Behaviour
+  def update(recipe) do
+    %PostgresStore.Recipe{id: recipe.id}
+    |> PostgresStore.Recipe.changeset(domain_recipe_to_postgres(recipe))
+    |> PostgresStore.Repo.update()
     |> case do
       {:ok, %PostgresStore.Recipe{} = recipe} ->
         {:ok, PostgresStore.DomainMapper.to_domain_recipe(recipe)}
@@ -29,11 +43,10 @@ defmodule Relix.RecipeStore.PostgresStore do
 
   @impl Relix.RecipeStore.Behaviour
   def get_recipe_by_id(id) do
-    query = from(r in PostgresStore.Recipe, where: r.id == ^id, preload: [:items])
-
-    case PostgresStore.Repo.get(PostgresStore.Recipe, query) do
+    case PostgresStore.Repo.get(PostgresStore.Recipe, id)
+         |> PostgresStore.Repo.preload([:items]) do
       %PostgresStore.Recipe{} = recipe ->
-        recipe |> Enum.map(&PostgresStore.DomainMapper.to_domain_recipe/1)
+        recipe |> PostgresStore.DomainMapper.to_domain_recipe()
 
       _ ->
         :not_found

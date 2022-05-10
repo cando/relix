@@ -1,6 +1,6 @@
 defmodule Relix.RecipeListTest do
   import Mox
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   doctest Relix
   setup :verify_on_exit!
 
@@ -15,7 +15,7 @@ defmodule Relix.RecipeListTest do
     test "new recipe" do
       RecipeStoreBehaviourMock
       |> expect(:get_next_identity, 2, fn -> 1 end)
-      |> expect(:save, 1, fn r -> {:ok, r} end)
+      |> expect(:insert, 1, fn r -> {:ok, r} end)
 
       assert Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1) ==
                %Recipe{
@@ -80,20 +80,20 @@ defmodule Relix.RecipeListTest do
       assert Relix.RecipeList.get_recipe_by_id(42) == :not_found
     end
 
-    test "update recipe" do
+    test "rename recipe" do
       Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
 
       stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> recipe end)
 
-      assert Relix.RecipeList.update_recipe(%Recipe{recipe | name: "RecipeNuova"}) ==
+      assert Relix.RecipeList.rename_recipe(recipe.id, "RecipeNuova") ==
                {:ok, %Recipe{recipe | name: "RecipeNuova"}}
 
       stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> :not_found end)
 
-      assert Relix.RecipeList.update_recipe(%Recipe{recipe | id: :fake, name: "RecipeNuova"}) ==
-               :not_found
+      assert Relix.RecipeList.rename_recipe(42, "RecipeNuova") ==
+               {:error, :not_found}
     end
   end
 end
