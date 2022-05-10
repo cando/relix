@@ -4,21 +4,17 @@ defmodule Relix.StubRecipeStore do
   @impl Relix.RecipeStore.Behaviour
   @spec get_recipes :: [Relix.Recipe.t()]
   def get_recipes() do
-    [
-      %Relix.Recipe{
-        id: 1,
-        name: "Recipe1",
-        type: "RECIPE",
-        state: :draft,
-        version: 1,
-        items: %{1 => 2}
-      }
-    ]
+    []
   end
 
   @impl Relix.RecipeStore.Behaviour
   def save(recipe) do
     {:ok, recipe}
+  end
+
+  @impl Relix.RecipeStore.Behaviour
+  def get_recipe_by_id(_id) do
+    %Relix.Recipe{}
   end
 
   @impl Relix.RecipeStore.Behaviour

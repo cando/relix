@@ -28,6 +28,19 @@ defmodule Relix.RecipeStore.PostgresStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
+  def get_recipe_by_id(id) do
+    query = from(r in PostgresStore.Recipe, where: r.id == ^id, preload: [:items])
+
+    case PostgresStore.Repo.get(PostgresStore.Recipe, query) do
+      %PostgresStore.Recipe{} = recipe ->
+        recipe |> Enum.map(&PostgresStore.DomainMapper.to_domain_recipe/1)
+
+      _ ->
+        :not_found
+    end
+  end
+
+  @impl Relix.RecipeStore.Behaviour
   @spec get_recipes() :: [%Relix.Recipe{}]
   def get_recipes() do
     query = from(r in PostgresStore.Recipe, preload: [:items])

@@ -23,9 +23,7 @@ defmodule Relix.RecipeList do
 
   @spec get_recipe_by_id(any()) :: %Recipe{} | :not_found
   def get_recipe_by_id(recipe_id) do
-    get_recipes()
-    |> Enum.filter(&(&1.id == recipe_id))
-    |> List.first(:not_found)
+    get_recipe_store().get_recipe_by_id(recipe_id)
   end
 
   @spec update_recipe(%Recipe{}) :: :ok | :not_found

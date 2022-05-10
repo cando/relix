@@ -33,12 +33,28 @@ defmodule Relix.RecipeListTest do
     test "delete recipe" do
       Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
 
+      RecipeStoreBehaviourMock
+      |> expect(:delete_by_id, 1, fn _ -> :ok end)
+
       assert Relix.RecipeList.delete_recipe(1) == :ok
-      assert Relix.RecipeList.delete_recipe(42) == :not_found
     end
 
     test "get recipes" do
       Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
+
+      RecipeStoreBehaviourMock
+      |> expect(:get_recipes, 1, fn ->
+        [
+          %Recipe{
+            id: 1,
+            name: "Recipe1",
+            type: "RECIPE",
+            state: :draft,
+            version: 1,
+            items: %{1 => 2}
+          }
+        ]
+      end)
 
       assert Relix.RecipeList.get_recipes() == [
                %Recipe{
@@ -56,9 +72,11 @@ defmodule Relix.RecipeListTest do
       Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
-      stub(RecipeStoreBehaviourMock, :get_recipes, fn -> [recipe] end)
+      RecipeStoreBehaviourMock |> expect(:get_recipe_by_id, 1, fn _ -> recipe end)
 
       assert Relix.RecipeList.get_recipe_by_id(recipe.id) == recipe
+
+      RecipeStoreBehaviourMock |> expect(:get_recipe_by_id, 1, fn _ -> :not_found end)
       assert Relix.RecipeList.get_recipe_by_id(42) == :not_found
     end
 
@@ -67,10 +85,12 @@ defmodule Relix.RecipeListTest do
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
 
-      stub(RecipeStoreBehaviourMock, :get_recipes, fn -> [recipe] end)
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> recipe end)
 
       assert Relix.RecipeList.update_recipe(%Recipe{recipe | name: "RecipeNuova"}) ==
                {:ok, %Recipe{recipe | name: "RecipeNuova"}}
+
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> :not_found end)
 
       assert Relix.RecipeList.update_recipe(%Recipe{recipe | id: :fake, name: "RecipeNuova"}) ==
                :not_found
