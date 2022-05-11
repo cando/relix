@@ -8,7 +8,7 @@ defmodule Relix.RecipeListTest do
 
   setup_all _ do
     Mox.defmock(RecipeStoreBehaviourMock, for: Relix.RecipeStore.Behaviour)
-    Application.put_env(:relix, :recipe_repo, RecipeStoreBehaviourMock)
+    Application.put_env(:relix, :recipe_store, RecipeStoreBehaviourMock)
   end
 
   describe "manage recipes" do

@@ -2,7 +2,7 @@ defmodule Relix.RecipeListIntegrationTest do
   use Relix.RecipeRepoCase
 
   setup_all _ do
-    Application.put_env(:relix, :recipe_repo, Relix.RecipeStore.PostgresStore)
+    Application.put_env(:relix, :recipe_store, Relix.RecipeStore.PostgresStore)
   end
 
   describe "manage recipes" do

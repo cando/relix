@@ -1,33 +1,48 @@
 defmodule Relix.RecipeList do
+  use Supervisor
+
   alias Relix.Recipe
+  alias Relix.RecipeStore
+
+  def start_link(init_arg) do
+    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+  end
+
+  @impl true
+  def init(_init_arg) do
+    children = [
+      RecipeStore
+    ]
+
+    Supervisor.init(children, strategy: :one_for_one)
+  end
 
   @spec new_recipe(String.t(), String.t(), map) ::
           {:error, :validation_error} | {:ok, Relix.Recipe.t()}
   def new_recipe(name, type, items) do
-    store = get_recipe_store()
-    new_id = store.get_next_identity()
+    new_id = RecipeStore.get_next_identity()
 
     with {:ok, new_recipe} <- Recipe.new(new_id, name, type, items),
-         {:ok, db_recipe} <- store.insert(new_recipe) do
+         {:ok, db_recipe} <- RecipeStore.insert(new_recipe) do
       {:ok, db_recipe}
     end
   end
 
   @spec get_recipe_by_id(any()) :: %Recipe{} | :not_found
   def get_recipe_by_id(recipe_id) do
-    get_recipe_store().get_recipe_by_id(recipe_id)
+    RecipeStore.get_recipe_by_id(recipe_id)
   end
 
   @spec get_recipes :: [%Recipe{}]
   def get_recipes() do
-    get_recipe_store().get_recipes()
+    RecipeStore.get_recipes()
   end
 
   @spec delete_recipe(any) :: :ok
   def delete_recipe(recipe_id) do
     case get_recipe_by_id(recipe_id) do
       :not_found -> :not_found
-      _ -> get_recipe_store().delete_by_id(recipe_id)
+      _ -> RecipeStore.delete_by_id(recipe_id)
     end
   end
 
@@ -35,7 +50,7 @@ defmodule Relix.RecipeList do
   def rename_recipe(recipe_id, new_name) do
     case get_recipe_by_id(recipe_id) do
       :not_found -> {:error, :not_found}
-      recipe -> get_recipe_store().update(%Recipe{recipe | name: new_name})
+      recipe -> RecipeStore.update(%Recipe{recipe | name: new_name})
     end
   end
 
@@ -47,7 +62,7 @@ defmodule Relix.RecipeList do
 
       recipe ->
         Relix.Recipe.add_or_update_item(recipe, item_key, item_value)
-        |> get_recipe_store().update
+        |> RecipeStore.update()
     end
   end
 
@@ -59,11 +74,7 @@ defmodule Relix.RecipeList do
 
       recipe ->
         Relix.Recipe.delete_item(recipe, item_key)
-        |> get_recipe_store().update
+        |> RecipeStore.update()
     end
-  end
-
-  defp get_recipe_store() do
-    Application.get_env(:relix, :recipe_repo)
   end
 end

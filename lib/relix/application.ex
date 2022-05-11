@@ -7,9 +7,12 @@ defmodule Relix.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      # Relix.RecipeStore.PostgresStore.Repo
-    ]
+    children =
+      if Mix.env() == :test,
+        do: [],
+        else: [
+          Relix.RecipeList
+        ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
