@@ -1,6 +1,6 @@
 defmodule Relix.RecipeListTest do
   import Mox
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Relix
   setup :verify_on_exit!
 

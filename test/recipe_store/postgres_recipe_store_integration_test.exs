@@ -43,7 +43,7 @@ defmodule Relix.PostegresRecipeStoreIntegrationTest do
   @tag :database
   test "delete recipe by id" do
     assert PostgresStore.get_recipes() == []
-    assert PostgresStore.delete_by_id(1) == :ok
+    assert PostgresStore.delete_by_id(1) == {:error, :not_found}
 
     {:ok, _persisted} = PostgresStore.insert(Recipe.new(1, "Recipe1", "RECIPE", %{}) |> elem(1))
 

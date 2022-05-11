@@ -12,6 +12,7 @@ defmodule Relix.RecipeRepoCase do
   end
 
   setup tags do
+    start_supervised(Relix.RecipeStore.PostgresStore.Repo)
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Relix.RecipeStore.PostgresStore.Repo)
 
     unless tags[:async] do

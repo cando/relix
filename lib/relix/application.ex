@@ -8,7 +8,7 @@ defmodule Relix.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Relix.RecipeStore.PostgresStore.Repo
+      # Relix.RecipeStore.PostgresStore.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

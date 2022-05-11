@@ -68,7 +68,7 @@ defmodule Relix.RecipeStore.PostgresStore do
 
     case recipe do
       nil ->
-        :ok
+        {:error, :not_found}
 
       _ ->
         case PostgresStore.Repo.delete(recipe) do
