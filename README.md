@@ -1,21 +1,28 @@
 # Relix
 
 A simple SQL-backed recipe manager system.
+Developed for educational purposes and to practice/study Elixir, Phoenix, Docker, TDD and hexagonal architectures.
 
-## Installation
+Hex architecture references:
+- https://jmgarridopaz.github.io/content/hexagonalarchitecture.html
+- https://alistair.cockburn.us/hexagonal-architecture/
+- https://aaronrenner.io/2019/09/18/application-layering-a-pattern-for-extensible-elixir-application-design.html
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `relix` to your list of dependencies in `mix.exs`:
 
-```elixir
-def deps do
-  [
-    {:relix, "~> 0.1.0"}
-  ]
-end
+## Testing
+
+```console
+docker-compose up -d
+mix test.integration
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/relix>.
+### TODO: 
+setup something like
+```console
+docker-compose run --rm test
+```
+
+https://www.cloudbees.com/blog/running-your-phoenix-tests-using-docker
+
+
 
