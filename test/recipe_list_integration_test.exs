@@ -49,8 +49,37 @@ defmodule Relix.RecipeListIntegrationTest do
 
       assert Relix.RecipeList.rename_recipe(42, "RecipeNuova") ==
                {:error, :not_found}
+    end
+  end
 
-      # TODO add or update item test sia nel dominio, che nell'integration
+  describe "handling recipe items" do
+    test "add item to recipe" do
+      recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{}) |> elem(1)
+
+      {:ok, recipe} = Relix.RecipeList.add_or_update_item(recipe.id, "A", "B")
+      assert recipe.items["A"] == "B"
+      assert recipe.items["1"] == nil
+    end
+
+    test "recipe not found" do
+      assert Relix.RecipeList.add_or_update_item(42, "A", "B") == {:error, :not_found}
+    end
+
+    test "update item in recipe" do
+      recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{"1" => "2"}) |> elem(1)
+
+      {:ok, recipe} = Relix.RecipeList.add_or_update_item(recipe.id, "1", "42")
+      assert recipe.items["1"] == "42"
+    end
+
+    test "delete item in recipe" do
+      recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{"1" => "2"}) |> elem(1)
+
+      {:ok, recipe} = Relix.RecipeList.delete_item(recipe.id, "NOTEXISTENT")
+      assert recipe.items == %{"1" => "2"}
+
+      {:ok, recipe} = Relix.RecipeList.delete_item(recipe.id, "1")
+      assert recipe.items == %{}
     end
   end
 end

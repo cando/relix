@@ -39,6 +39,30 @@ defmodule Relix.RecipeList do
     end
   end
 
+  @spec add_or_update_item(any(), String.t(), String.t()) :: {:ok, %Recipe{}} | {:error, any()}
+  def add_or_update_item(recipe_id, item_key, item_value) do
+    case get_recipe_by_id(recipe_id) do
+      :not_found ->
+        {:error, :not_found}
+
+      recipe ->
+        Relix.Recipe.add_or_update_item(recipe, item_key, item_value)
+        |> get_recipe_store().update
+    end
+  end
+
+  @spec delete_item(any(), String.t()) :: {:ok, %Recipe{}} | {:error, any()}
+  def delete_item(recipe_id, item_key) do
+    case get_recipe_by_id(recipe_id) do
+      :not_found ->
+        {:error, :not_found}
+
+      recipe ->
+        Relix.Recipe.delete_item(recipe, item_key)
+        |> get_recipe_store().update
+    end
+  end
+
   defp get_recipe_store() do
     Application.get_env(:relix, :recipe_repo)
   end

@@ -32,11 +32,35 @@ defmodule Relix.Recipe do
 
   @spec add_or_update_item(%Relix.Recipe{}, String.t(), any()) :: %Relix.Recipe{}
   def add_or_update_item(recipe, item_key, item_value) do
+    new_items = Map.put(recipe.items, item_key, item_value)
+
+    {new_state, new_version} =
+      if Map.equal?(new_items, recipe.items),
+        do: {recipe.state, recipe.version},
+        else: {@draft, bump_version(recipe)}
+
     %Relix.Recipe{
       recipe
-      | items: Map.put(recipe.items, item_key, item_value),
-        state: @draft,
-        version: bump_version(recipe)
+      | items: new_items,
+        state: new_state,
+        version: new_version
+    }
+  end
+
+  @spec delete_item(%Relix.Recipe{}, String.t()) :: %Relix.Recipe{}
+  def delete_item(recipe, item_key) do
+    new_items = Map.delete(recipe.items, item_key)
+
+    {new_state, new_version} =
+      if Map.equal?(new_items, recipe.items),
+        do: {recipe.state, recipe.version},
+        else: {@draft, bump_version(recipe)}
+
+    %Relix.Recipe{
+      recipe
+      | items: new_items,
+        state: new_state,
+        version: new_version
     }
   end
 

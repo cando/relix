@@ -74,4 +74,28 @@ defmodule RecipeTest do
     assert recipe1.state == @draft
     assert recipe1.version == 2
   end
+
+  test "delete item" do
+    recipe1 = Recipe.new(1, "Recipe1", "RECIPE", %{"pippo" => "pluto"}) |> elem(1)
+    recipe1 = Recipe.delete_item(recipe1, "pippo")
+    assert recipe1.items == %{}
+    assert recipe1.state == @draft
+    assert recipe1.version == 1
+
+    recipe2 = Recipe.delete_item(recipe1, "pippo")
+    assert recipe1 == recipe2
+
+    recipe1 = Recipe.new(1, "Recipe1", "RECIPE", %{"A" => "B"}) |> elem(1)
+    recipe1 = Recipe.approve(recipe1)
+
+    recipe1 = Recipe.delete_item(recipe1, "NO ESISTS")
+    assert recipe1.items == %{"A" => "B"}
+    assert recipe1.state == @approved
+    assert recipe1.version == 1
+
+    recipe1 = Recipe.delete_item(recipe1, "A")
+    assert recipe1.items == %{}
+    assert recipe1.state == @draft
+    assert recipe1.version == 2
+  end
 end
