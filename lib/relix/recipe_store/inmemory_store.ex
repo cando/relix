@@ -3,7 +3,7 @@ defmodule Relix.RecipeStore.InMemoryStore do
   use Agent
 
   def start_link(_opts) do
-    Agent.start_link(fn -> {1, %{}} end, name: __MODULE__)
+    Agent.start_link(fn -> {0, %{}} end, name: __MODULE__)
   end
 
   @impl Relix.RecipeStore.Behaviour

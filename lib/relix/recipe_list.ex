@@ -19,7 +19,7 @@ defmodule Relix.RecipeList do
 
   @spec new_recipe(String.t(), String.t(), map) ::
           {:error, :validation_error} | {:ok, Relix.Recipe.t()}
-  def new_recipe(name, type, items) do
+  def new_recipe(name, type, items \\ %{}) do
     new_id = RecipeStore.get_next_identity()
 
     with {:ok, new_recipe} <- Recipe.new(new_id, name, type, items),
