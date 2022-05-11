@@ -18,4 +18,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :relix_web, :generators, context_app: :relix
+
 import_config "#{Mix.env()}.exs"

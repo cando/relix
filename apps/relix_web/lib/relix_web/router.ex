@@ -7,6 +7,8 @@ defmodule RelixWeb.Router do
 
   scope "/api", RelixWeb do
     pipe_through :api
+
+    resources "/recipes", RecipeController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development
