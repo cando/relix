@@ -1,9 +1,9 @@
 import Config
 
 config :relix, Relix.RecipeStore.PostgresStore.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
+  username: System.get_env("PGUSER", "postgres"),
+  password: System.get_env("PGPASSWORD", "postgres"),
+  hostname: System.get_env("PGHOST", "localhost"),
   database: "db_relix_test",
   pool: Ecto.Adapters.SQL.Sandbox
 

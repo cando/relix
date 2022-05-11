@@ -4,9 +4,9 @@ config :relix, :recipe_store, Relix.RecipeStore.PostgresStore
 config :logger, level: :debug
 
 config :relix, Relix.RecipeStore.PostgresStore.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
+  username: System.get_env("PGUSER", "postgres"),
+  password: System.get_env("PGPASSWORD", "postgres"),
+  hostname: System.get_env("PGHOST", "localhost"),
   database: "db_relix_dev"
 
 # Phoenix Stuffs
@@ -20,7 +20,7 @@ config :relix, Relix.RecipeStore.PostgresStore.Repo,
 config :relix_web, RelixWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,

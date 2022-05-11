@@ -8,21 +8,17 @@ Hex architecture references:
 - https://alistair.cockburn.us/hexagonal-architecture/
 - https://aaronrenner.io/2019/09/18/application-layering-a-pattern-for-extensible-elixir-application-design.html
 
+## Running
+
+```console
+docker-compose up -d
+```
+The web api service will be listening at http://localhost:4000
 
 ## Testing
 
 ```console
-docker-compose up -d
-mix test.integration
+docker-compose run --rm -e "MIX_ENV=test" web mix test && docker-compose down
 ```
-
-### TODO: 
-setup something like
-```console
-docker-compose run --rm test
-```
-
-https://www.cloudbees.com/blog/running-your-phoenix-tests-using-docker
-
 
 

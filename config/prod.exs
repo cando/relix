@@ -3,9 +3,9 @@ import Config
 config :relix, :recipe_store, Relix.RecipeStore.PostgresStore
 
 config :relix, Relix.RecipeStore.PostgresStore.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
+  username: System.get_env("PGUSER"),
+  password: System.get_env("PGPASSWORD"),
+  hostname: System.get_env("PGHOST"),
   database: "db_relix_prod"
 
 # Phoenix stuffs
