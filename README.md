@@ -1,7 +1,7 @@
 # Relix
 
 A simple SQL-backed recipe manager system.
-Developed for educational purposes and to practice/study Elixir, Phoenix, Docker, TDD and hexagonal architectures.
+Developed for educational purposes and to practice/study Elixir, Phoenix, Docker, TDD, GraphQL and hexagonal architectures.
 
 Hex architecture references:
 - https://jmgarridopaz.github.io/content/hexagonalarchitecture.html
@@ -19,12 +19,24 @@ docker-compose build
 ```console
 docker-compose up -d
 ```
-The web api service will be listening at http://localhost:4000
+The web api service will be listening at http://localhost:4000/api (REST) and http://localhost:4000/api/graphql (GRAPHQL)
 
 ## Testing
 
 ```console
 docker-compose run --rm -e "MIX_ENV=test" web mix test && docker-compose down
 ```
+
+# TODO
+
+- Finish GraphQl implementation:
+    - add/update/delete items (add also inline when creating a new recipe)
+    - delete recipe
+    - rename recipe
+    - recipe state shall an enum (:approved, :draft)
+    - study/implement graphql subscription
+- Benchee:
+    - app performance under various load (beam, rest, graphql)
+    - evaluate different agent architecture (spawn more?)
 
 

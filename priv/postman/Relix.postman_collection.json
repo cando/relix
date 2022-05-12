@@ -6,15 +6,320 @@
 	},
 	"item": [
 		{
-			"name": "Recipes",
+			"name": "REST",
 			"item": [
 				{
-					"name": "Get Recipes",
+					"name": "Recipes",
+					"item": [
+						{
+							"name": "Get Recipes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Recipe",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Cando",
+											"type": "default"
+										},
+										{
+											"key": "type",
+											"value": "RECIPE",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Recipe by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Approve Recipe",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/1/approve",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"1",
+										"approve"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rename recipe",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "plutoa",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/3",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Recipe",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Recipe items",
+					"item": [
+						{
+							"name": "Get recipe items",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/3/items",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"3",
+										"items"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add recipe item",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/2/items?id=item_1&value=Test item",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"2",
+										"items"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "item_1"
+										},
+										{
+											"key": "value",
+											"value": "Test item"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update recipe item",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/3/items/item_211?value=nuovo value2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"3",
+										"items",
+										"item_211"
+									],
+									"query": [
+										{
+											"key": "value",
+											"value": "nuovo value2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete recipe item",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/3/items/item_4edddd",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"3",
+										"items",
+										"item_4edddd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get recipe item (single)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/recipes/3/items/item_2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"recipes",
+										"3",
+										"items",
+										"item_2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "GraphQL",
+			"item": [
+				{
+					"name": "Get all recipes",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  allRecipes{\n    id\n    name\n    type\n    version\n    state\n    items {\n      id\n      value\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
 						"url": {
-							"raw": "http://localhost:4000/api/recipes",
+							"raw": "http://localhost:4000/api/graphql/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -22,7 +327,36 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"recipes"
+								"graphql",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get recipe by id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  recipe(id: 1){\n    id\n    version\n    state\n    items {\n      id\n      value\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/graphql/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"graphql",
+								""
 							]
 						}
 					},
@@ -34,22 +368,14 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "A",
-									"type": "default"
-								},
-								{
-									"key": "type",
-									"value": "C",
-									"type": "default"
-								}
-							]
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createRecipe(name: \"Second\", type: \"RECIPE\") {\n    id\n    name\n    type\n  }\n}",
+								"variables": ""
+							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/recipes",
+							"raw": "http://localhost:4000/api/graphql/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -57,240 +383,8 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"recipes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Recipe by Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Approve Recipe",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/1/approve",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"1",
-								"approve"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Rename recipe",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "plutoa",
-									"type": "default"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/3",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Recipe",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Recipe items",
-			"item": [
-				{
-					"name": "Get recipe items",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/3/items",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"3",
-								"items"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add recipe item",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/3/items?id=item_4&value=nuovo",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"3",
-								"items"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "item_4"
-								},
-								{
-									"key": "value",
-									"value": "nuovo"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update recipe item",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/3/items/item_211?value=nuovo value2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"3",
-								"items",
-								"item_211"
-							],
-							"query": [
-								{
-									"key": "value",
-									"value": "nuovo value2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete recipe item",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/3/items/item_4edddd",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"3",
-								"items",
-								"item_4edddd"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get recipe item (single)",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/3/items/item_2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"3",
-								"items",
-								"item_2"
+								"graphql",
+								""
 							]
 						}
 					},

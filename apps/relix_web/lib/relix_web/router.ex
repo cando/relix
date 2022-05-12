@@ -5,12 +5,18 @@ defmodule RelixWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", RelixWeb do
+  scope "/api" do
     pipe_through :api
 
-    resources "/recipes", RecipeController, except: [:new, :edit] do
-      post "/approve", RecipeController, :approve
-      resources "/items", RecipeItemController, except: [:new, :edit]
+    resources "/recipes", RelixWeb.RecipeController, except: [:new, :edit] do
+      post "/approve", RelixWeb.RecipeController, :approve
+      resources "/items", RelixWeb.RecipeItemController, except: [:new, :edit]
+    end
+
+    forward "/graphql", Absinthe.Plug, schema: RelixWeb.GraphQl.Schema
+
+    if Mix.env() in [:dev, :test] do
+      forward "/graphiql", Absinthe.Plug.GraphiQL, schema: RelixWeb.GraphQl.Schema
     end
   end
 
