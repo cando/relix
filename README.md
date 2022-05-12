@@ -8,6 +8,12 @@ Hex architecture references:
 - https://alistair.cockburn.us/hexagonal-architecture/
 - https://aaronrenner.io/2019/09/18/application-layering-a-pattern-for-extensible-elixir-application-design.html
 
+## Prerequisite
+
+```console
+docker-compose build
+```
+
 ## Running
 
 ```console
