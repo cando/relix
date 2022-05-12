@@ -1,4 +1,6 @@
 defmodule Relix.StubRecipeStore do
+  @moduledoc false
+
   @behaviour Relix.RecipeStore.Behaviour
 
   @impl Relix.RecipeStore.Behaviour

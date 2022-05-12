@@ -1,4 +1,7 @@
 defmodule Relix.Recipe do
+  @moduledoc """
+  The main entity handled by relix.
+  """
   defstruct [:id, :name, :type, :state, :version, items: %{}]
 
   @type t :: %__MODULE__{
@@ -15,7 +18,7 @@ defmodule Relix.Recipe do
 
   @type recipe_state :: :approved | :draft
 
-  @spec new(any(), String.t(), String.t(), map()) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  @spec new(any(), String.t(), String.t(), map()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def new(id, name, type, items \\ %{}) do
     with :ok <- validate_name(name),
          :ok <- validate_type(type) do
@@ -30,7 +33,7 @@ defmodule Relix.Recipe do
     %Relix.Recipe{recipe | state: @approved}
   end
 
-  @spec add_or_update_item(%Relix.Recipe{}, String.t(), any()) :: %Relix.Recipe{}
+  @spec add_or_update_item(Relix.Recipe.t(), String.t(), any()) :: Relix.Recipe.t()
   def add_or_update_item(recipe, item_key, item_value) do
     new_items = Map.put(recipe.items, item_key, item_value)
 
@@ -47,7 +50,7 @@ defmodule Relix.Recipe do
     }
   end
 
-  @spec delete_item(%Relix.Recipe{}, String.t()) :: %Relix.Recipe{}
+  @spec delete_item(Relix.Recipe.t(), String.t()) :: Relix.Recipe.t()
   def delete_item(recipe, item_key) do
     new_items = Map.delete(recipe.items, item_key)
 

@@ -43,7 +43,8 @@ defmodule RelixWeb.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:relix, in_umbrella: true},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]
   end
 

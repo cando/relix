@@ -1,10 +1,20 @@
 defmodule Relix.RecipeStore.PostgresStore.Recipe do
   @moduledoc false
-
   use Ecto.Schema
 
   import Ecto.Changeset
   alias Relix.RecipeStore.PostgresStore
+
+  @type recipe_state :: :approved | :draft
+
+  @type t :: %__MODULE__{
+          id: integer(),
+          name: String.t(),
+          type: String.t(),
+          state: recipe_state,
+          version: integer(),
+          items: list()
+        }
 
   schema "recipes" do
     field(:name, :string)

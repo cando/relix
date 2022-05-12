@@ -3,7 +3,7 @@ defmodule Relix.RecipeStore.PostgresStore.DomainMapper do
 
   alias Relix.RecipeStore.PostgresStore
 
-  @spec to_domain_recipe(%PostgresStore.Recipe{}) :: %Relix.Recipe{}
+  @spec to_domain_recipe(PostgresStore.Recipe.t()) :: Relix.Recipe.t()
   def to_domain_recipe(%PostgresStore.Recipe{} = recipe) do
     recipe
     |> Map.from_struct()

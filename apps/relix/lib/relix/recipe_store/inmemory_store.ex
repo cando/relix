@@ -1,4 +1,6 @@
 defmodule Relix.RecipeStore.InMemoryStore do
+  @moduledoc false
+
   @behaviour Relix.RecipeStore.Behaviour
   use Agent
 
@@ -7,14 +9,14 @@ defmodule Relix.RecipeStore.InMemoryStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
-  @spec insert(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  @spec insert(recipe :: Relix.Recipe.t()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def insert(recipe) do
     :ok = Agent.update(__MODULE__, fn {id, map} -> {id, Map.put(map, recipe.id, recipe)} end)
     {:ok, recipe}
   end
 
   @impl Relix.RecipeStore.Behaviour
-  @spec update(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  @spec update(recipe :: Relix.Recipe.t()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def update(recipe) do
     Agent.get_and_update(__MODULE__, fn {id, map} ->
       case Map.has_key?(map, recipe.id) do
@@ -43,7 +45,7 @@ defmodule Relix.RecipeStore.InMemoryStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
-  @spec get_recipes() :: [%Relix.Recipe{}]
+  @spec get_recipes() :: [Relix.Recipe.t()]
   def get_recipes() do
     Agent.get(__MODULE__, fn {_id, map} -> Map.values(map) end)
   end

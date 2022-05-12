@@ -25,7 +25,7 @@ defmodule Relix.RecipeListIntegrationTest do
 
       assert length(Relix.RecipeList.get_recipes()) == 1
       assert Relix.RecipeList.delete_recipe(recipe.id) == :ok
-      assert length(Relix.RecipeList.get_recipes()) == 0
+      assert Relix.RecipeList.get_recipes() == []
     end
 
     test "get recipes" do

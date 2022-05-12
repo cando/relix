@@ -1,4 +1,7 @@
 defmodule Relix.RecipeList do
+  @moduledoc """
+  The module used to handle Recipe objects
+  """
   use Supervisor
 
   alias Relix.Recipe
@@ -22,18 +25,17 @@ defmodule Relix.RecipeList do
   def new_recipe(name, type, items \\ %{}) do
     new_id = RecipeStore.get_next_identity()
 
-    with {:ok, new_recipe} <- Recipe.new(new_id, name, type, items),
-         {:ok, db_recipe} <- RecipeStore.insert(new_recipe) do
-      {:ok, db_recipe}
+    with {:ok, new_recipe} <- Recipe.new(new_id, name, type, items) do
+      RecipeStore.insert(new_recipe)
     end
   end
 
-  @spec get_recipe_by_id(any()) :: {:ok, %Relix.Recipe{}} | {:error, :not_found}
+  @spec get_recipe_by_id(any()) :: {:ok, Relix.Recipe.t()} | {:error, :not_found}
   def get_recipe_by_id(recipe_id) do
     RecipeStore.get_recipe_by_id(recipe_id)
   end
 
-  @spec get_recipes :: [%Recipe{}]
+  @spec get_recipes :: [Relix.Recipe.t()]
   def get_recipes() do
     RecipeStore.get_recipes()
   end
@@ -43,14 +45,15 @@ defmodule Relix.RecipeList do
     RecipeStore.delete_by_id(recipe_id)
   end
 
-  @spec rename_recipe(any(), String.t()) :: {:ok, %Recipe{}} | {:error, :not_found}
+  @spec rename_recipe(any(), String.t()) :: {:ok, Relix.Recipe.t()} | {:error, :not_found}
   def rename_recipe(recipe_id, new_name) do
     with {:ok, recipe} <- get_recipe_by_id(recipe_id) do
       RecipeStore.update(%Recipe{recipe | name: new_name})
     end
   end
 
-  @spec add_or_update_item(any(), String.t(), String.t()) :: {:ok, %Recipe{}} | {:error, any()}
+  @spec add_or_update_item(any(), String.t(), String.t()) ::
+          {:ok, Relix.Recipe.t()} | {:error, any()}
   def add_or_update_item(recipe_id, item_key, item_value) do
     with {:ok, recipe} <- get_recipe_by_id(recipe_id) do
       Relix.Recipe.add_or_update_item(recipe, item_key, item_value)
@@ -58,7 +61,7 @@ defmodule Relix.RecipeList do
     end
   end
 
-  @spec delete_item(any(), String.t()) :: {:ok, %Recipe{}} | {:error, any()}
+  @spec delete_item(any(), String.t()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def delete_item(recipe_id, item_key) do
     with {:ok, recipe} <- get_recipe_by_id(recipe_id) do
       Relix.Recipe.delete_item(recipe, item_key) |> RecipeStore.update()

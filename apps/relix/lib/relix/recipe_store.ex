@@ -1,4 +1,6 @@
 defmodule Relix.RecipeStore do
+  @moduledoc false
+
   @behaviour Relix.RecipeStore.Behaviour
 
   @doc false
@@ -7,13 +9,13 @@ defmodule Relix.RecipeStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
-  @spec insert(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  @spec insert(recipe :: Relix.Recipe.t()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def insert(recipe) do
     impl().insert(recipe)
   end
 
   @impl Relix.RecipeStore.Behaviour
-  @spec update(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  @spec update(recipe :: Relix.Recipe.t()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def update(recipe) do
     impl().update(recipe)
   end
@@ -30,7 +32,7 @@ defmodule Relix.RecipeStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
-  @spec get_recipes() :: [%Relix.Recipe{}]
+  @spec get_recipes() :: [Relix.Recipe.t()]
   def get_recipes() do
     impl().get_recipes()
   end

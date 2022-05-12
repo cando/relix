@@ -35,11 +35,9 @@ defmodule RelixWeb.RecipeController do
   def update(conn, _), do: send_resp(conn, :forbidden, "")
 
   def delete(conn, %{"id" => id}) do
-    with :ok <- RecipeList.delete_recipe(id) do
-      send_resp(conn, :no_content, "")
-    else
-      _ ->
-        {:error, :not_found}
+    case RecipeList.delete_recipe(id) do
+      :ok -> send_resp(conn, :no_content, "")
+      _ -> {:error, :not_found}
     end
   end
 end

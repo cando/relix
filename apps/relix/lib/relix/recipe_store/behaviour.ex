@@ -1,4 +1,6 @@
 defmodule Relix.RecipeStore.Behaviour do
+  @moduledoc false
+
   @callback get_recipes() :: [%Relix.Recipe{}]
   @callback insert(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
   @callback update(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}

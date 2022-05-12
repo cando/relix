@@ -1,11 +1,13 @@
 defmodule Relix.RecipeStore.PostgresStore do
+  @moduledoc false
+
   @behaviour Relix.RecipeStore.Behaviour
 
   import Ecto.Query
   alias Relix.RecipeStore.PostgresStore
 
   @impl Relix.RecipeStore.Behaviour
-  @spec insert(recipe :: %Relix.Recipe{}) :: {:ok, %Relix.Recipe{}} | {:error, any()}
+  @spec insert(recipe :: Relix.Recipe.t()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def insert(recipe) do
     %PostgresStore.Recipe{}
     |> PostgresStore.Recipe.changeset(domain_recipe_to_postgres(recipe))
@@ -54,7 +56,7 @@ defmodule Relix.RecipeStore.PostgresStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
-  @spec get_recipes() :: [%Relix.Recipe{}]
+  @spec get_recipes() :: [Relix.Recipe.t()]
   def get_recipes() do
     query = from(r in PostgresStore.Recipe, preload: [:items])
 
