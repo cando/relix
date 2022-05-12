@@ -20,6 +20,12 @@ defmodule RelixWeb.RecipeController do
     end
   end
 
+  def approve(conn, %{"recipe_id" => id}) do
+    with {:ok, %Recipe{} = recipe} <- RecipeList.approve_recipe(id) do
+      render(conn, "show.json", recipe: recipe)
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     with {:ok, %Recipe{} = recipe} <- RecipeList.get_recipe_by_id(id) do
       render(conn, "show.json", recipe: recipe)

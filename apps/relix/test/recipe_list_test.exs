@@ -95,6 +95,13 @@ defmodule Relix.RecipeListTest do
       assert Relix.RecipeList.rename_recipe(42, "RecipeNuova") ==
                {:error, :not_found}
     end
+
+    test "approve recipe" do
+      Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
+      recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
+
+      assert %Recipe{state: :approved} == Relix.RecipeList.approve_recipe(recipe.id) |> elem(1)
+    end
   end
 
   describe "handling recipe items" do

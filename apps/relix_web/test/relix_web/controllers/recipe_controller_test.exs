@@ -37,6 +37,21 @@ defmodule RelixWeb.RecipeControllerTest do
     end
   end
 
+  describe "approve recipe" do
+    setup [:create_recipe]
+
+    test "approve recipe when data is valid", %{conn: conn, recipe: %Recipe{id: id} = recipe} do
+      conn = post(conn, Routes.recipe_recipe_path(conn, :approve, recipe))
+      assert response(conn, 200)
+
+      conn = get(conn, Routes.recipe_path(conn, :show, id))
+
+      assert %{
+               "state" => "approved"
+             } = json_response(conn, 200)["data"]
+    end
+  end
+
   describe "update recipe" do
     setup [:create_recipe]
 

@@ -9,6 +9,7 @@ defmodule RelixWeb.Router do
     pipe_through :api
 
     resources "/recipes", RecipeController, except: [:new, :edit] do
+      post "/approve", RecipeController, :approve
       resources "/items", RecipeItemController, except: [:new, :edit]
     end
   end

@@ -40,6 +40,13 @@ defmodule Relix.RecipeList do
     RecipeStore.get_recipes()
   end
 
+  @spec approve_recipe(any()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
+  def approve_recipe(recipe_id) do
+    with {:ok, recipe} <- get_recipe_by_id(recipe_id) do
+      Recipe.approve(recipe) |> RecipeStore.update()
+    end
+  end
+
   @spec delete_recipe(any) :: :ok | {:error, any()}
   def delete_recipe(recipe_id) do
     RecipeStore.delete_by_id(recipe_id)
