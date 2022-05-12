@@ -9,6 +9,104 @@
 			"name": "Recipes",
 			"item": [
 				{
+					"name": "Get Recipes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Recipe",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "A",
+									"type": "default"
+								},
+								{
+									"key": "type",
+									"value": "C",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Recipe",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/recipes/1/approve",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Rename recipe",
 					"request": {
 						"method": "PATCH",
@@ -59,82 +157,6 @@
 								"api",
 								"recipes",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Recipe by Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes/3",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Recipes",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/recipes",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "New Recipe",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "A",
-									"type": "default"
-								},
-								{
-									"key": "type",
-									"value": "C",
-									"type": "default"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:4000/api/recipes",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"recipes"
 							]
 						}
 					},
