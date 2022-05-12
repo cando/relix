@@ -36,9 +36,9 @@ defmodule Relix.InMemoryecipeStoreIntegrationTest do
 
   test "get recipe by id" do
     {:ok, persisted} = InMemoryStore.insert(Recipe.new(1, "Recipe1", "RECIPE", %{}) |> elem(1))
-    assert InMemoryStore.get_recipe_by_id(persisted.id) == persisted
+    assert InMemoryStore.get_recipe_by_id(persisted.id) |> elem(1) == persisted
 
-    assert InMemoryStore.get_recipe_by_id(42) == :not_found
+    assert InMemoryStore.get_recipe_by_id(42) |> elem(1) == :not_found
   end
 
   test "delete recipe by id" do

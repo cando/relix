@@ -46,10 +46,10 @@ defmodule Relix.RecipeStore.PostgresStore do
     case PostgresStore.Repo.get(PostgresStore.Recipe, id)
          |> PostgresStore.Repo.preload([:items]) do
       %PostgresStore.Recipe{} = recipe ->
-        recipe |> PostgresStore.DomainMapper.to_domain_recipe()
+        {:ok, recipe |> PostgresStore.DomainMapper.to_domain_recipe()}
 
       _ ->
-        :not_found
+        {:error, :not_found}
     end
   end
 

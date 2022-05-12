@@ -37,8 +37,8 @@ defmodule Relix.RecipeListIntegrationTest do
 
     test "get recipe by id" do
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{"1" => "2"}) |> elem(1)
-      assert Relix.RecipeList.get_recipe_by_id(recipe.id) == recipe
-      assert Relix.RecipeList.get_recipe_by_id(42) == :not_found
+      assert Relix.RecipeList.get_recipe_by_id(recipe.id) |> elem(1) == recipe
+      assert Relix.RecipeList.get_recipe_by_id(42) |> elem(1) == :not_found
     end
 
     test "rename recipe" do

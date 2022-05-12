@@ -31,11 +31,13 @@ defmodule Relix.RecipeStore.InMemoryStore do
   end
 
   @impl Relix.RecipeStore.Behaviour
+  def get_recipe_by_id(id) when is_binary(id), do: get_recipe_by_id(String.to_integer(id))
+
   def get_recipe_by_id(id) do
     Agent.get(__MODULE__, fn {_, map} ->
       case Map.has_key?(map, id) do
-        true -> Map.get(map, id)
-        false -> :not_found
+        true -> {:ok, Map.get(map, id)}
+        false -> {:error, :not_found}
       end
     end)
   end
@@ -48,6 +50,8 @@ defmodule Relix.RecipeStore.InMemoryStore do
 
   @impl Relix.RecipeStore.Behaviour
   @spec delete_by_id(id :: any()) :: :ok | {:error, any()}
+  def delete_by_id(id) when is_binary(id), do: delete_by_id(String.to_integer(id))
+
   def delete_by_id(id) do
     Agent.get_and_update(__MODULE__, fn {id_i, map} ->
       case Map.has_key?(map, id) do

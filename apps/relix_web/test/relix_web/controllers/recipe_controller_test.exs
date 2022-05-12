@@ -1,19 +1,14 @@
 defmodule RelixWeb.RecipeControllerTest do
   use RelixWeb.ConnCase
 
-  import Relix.RecipeListFixtures
+  alias Relix.Recipe
 
-  alias Relix.RecipeList.Recipe
-
-  @create_attrs %{
-
-  }
-  @update_attrs %{
-
-  }
-  @invalid_attrs %{}
+  @create_attrs %{"name" => "A", "type" => "B"}
+  @invalid_attrs %{"name" => nil, "type" => nil}
 
   setup %{conn: conn} do
+    start_supervised(Relix.RecipeStore.InMemoryStore)
+    Application.put_env(:relix, :recipe_store, Relix.RecipeStore.InMemoryStore)
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
@@ -26,7 +21,7 @@ defmodule RelixWeb.RecipeControllerTest do
 
   describe "create recipe" do
     test "renders recipe when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.recipe_path(conn, :create), recipe: @create_attrs)
+      conn = post(conn, Routes.recipe_path(conn, :create), @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, Routes.recipe_path(conn, :show, id))
@@ -37,7 +32,7 @@ defmodule RelixWeb.RecipeControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.recipe_path(conn, :create), recipe: @invalid_attrs)
+      conn = post(conn, Routes.recipe_path(conn, :create), @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -46,19 +41,19 @@ defmodule RelixWeb.RecipeControllerTest do
     setup [:create_recipe]
 
     test "renders recipe when data is valid", %{conn: conn, recipe: %Recipe{id: id} = recipe} do
-      conn = put(conn, Routes.recipe_path(conn, :update, recipe), recipe: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      conn = put(conn, Routes.recipe_path(conn, :update, recipe), name: "new name")
+      assert response(conn, 204)
 
       conn = get(conn, Routes.recipe_path(conn, :show, id))
 
       assert %{
-               "id" => ^id
+               "name" => "new name"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, recipe: recipe} do
-      conn = put(conn, Routes.recipe_path(conn, :update, recipe), recipe: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+      conn = put(conn, Routes.recipe_path(conn, :update, recipe), state: :approved)
+      assert response(conn, 403)
     end
   end
 
@@ -69,14 +64,14 @@ defmodule RelixWeb.RecipeControllerTest do
       conn = delete(conn, Routes.recipe_path(conn, :delete, recipe))
       assert response(conn, 204)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.recipe_path(conn, :show, recipe))
-      end
+      conn = get(conn, Routes.recipe_path(conn, :show, recipe))
+      assert response(conn, 404)
     end
   end
 
   defp create_recipe(_) do
-    recipe = recipe_fixture()
+    {:ok, recipe} = Recipe.new(1, "A", "B", %{"1" => "2"})
+    Relix.RecipeStore.InMemoryStore.insert(recipe)
     %{recipe: recipe}
   end
 end

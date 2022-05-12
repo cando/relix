@@ -28,7 +28,7 @@ defmodule Relix.RecipeList do
     end
   end
 
-  @spec get_recipe_by_id(any()) :: %Recipe{} | :not_found
+  @spec get_recipe_by_id(any()) :: {:ok, %Relix.Recipe{}} | {:error, :not_found}
   def get_recipe_by_id(recipe_id) do
     RecipeStore.get_recipe_by_id(recipe_id)
   end
@@ -38,43 +38,30 @@ defmodule Relix.RecipeList do
     RecipeStore.get_recipes()
   end
 
-  @spec delete_recipe(any) :: :ok
+  @spec delete_recipe(any) :: :ok | {:error, any()}
   def delete_recipe(recipe_id) do
-    case get_recipe_by_id(recipe_id) do
-      :not_found -> :not_found
-      _ -> RecipeStore.delete_by_id(recipe_id)
-    end
+    RecipeStore.delete_by_id(recipe_id)
   end
 
   @spec rename_recipe(any(), String.t()) :: {:ok, %Recipe{}} | {:error, :not_found}
   def rename_recipe(recipe_id, new_name) do
-    case get_recipe_by_id(recipe_id) do
-      :not_found -> {:error, :not_found}
-      recipe -> RecipeStore.update(%Recipe{recipe | name: new_name})
+    with {:ok, recipe} <- get_recipe_by_id(recipe_id) do
+      RecipeStore.update(%Recipe{recipe | name: new_name})
     end
   end
 
   @spec add_or_update_item(any(), String.t(), String.t()) :: {:ok, %Recipe{}} | {:error, any()}
   def add_or_update_item(recipe_id, item_key, item_value) do
-    case get_recipe_by_id(recipe_id) do
-      :not_found ->
-        {:error, :not_found}
-
-      recipe ->
-        Relix.Recipe.add_or_update_item(recipe, item_key, item_value)
-        |> RecipeStore.update()
+    with {:ok, recipe} <- get_recipe_by_id(recipe_id) do
+      Relix.Recipe.add_or_update_item(recipe, item_key, item_value)
+      |> RecipeStore.update()
     end
   end
 
   @spec delete_item(any(), String.t()) :: {:ok, %Recipe{}} | {:error, any()}
   def delete_item(recipe_id, item_key) do
-    case get_recipe_by_id(recipe_id) do
-      :not_found ->
-        {:error, :not_found}
-
-      recipe ->
-        Relix.Recipe.delete_item(recipe, item_key)
-        |> RecipeStore.update()
+    with {:ok, recipe} <- get_recipe_by_id(recipe_id) do
+      Relix.Recipe.delete_item(recipe, item_key) |> RecipeStore.update()
     end
   end
 end

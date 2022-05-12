@@ -72,12 +72,12 @@ defmodule Relix.RecipeListTest do
       Mox.stub_with(RecipeStoreBehaviourMock, Relix.StubRecipeStore)
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
-      RecipeStoreBehaviourMock |> expect(:get_recipe_by_id, 1, fn _ -> recipe end)
+      RecipeStoreBehaviourMock |> expect(:get_recipe_by_id, 1, fn _ -> {:ok, recipe} end)
 
-      assert Relix.RecipeList.get_recipe_by_id(recipe.id) == recipe
+      assert Relix.RecipeList.get_recipe_by_id(recipe.id) |> elem(1) == recipe
 
-      RecipeStoreBehaviourMock |> expect(:get_recipe_by_id, 1, fn _ -> :not_found end)
-      assert Relix.RecipeList.get_recipe_by_id(42) == :not_found
+      RecipeStoreBehaviourMock |> expect(:get_recipe_by_id, 1, fn _ -> {:error, :not_found} end)
+      assert Relix.RecipeList.get_recipe_by_id(42) |> elem(1) == :not_found
     end
 
     test "rename recipe" do
@@ -85,12 +85,12 @@ defmodule Relix.RecipeListTest do
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{1 => 2}) |> elem(1)
 
-      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> recipe end)
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> {:ok, recipe} end)
 
       assert Relix.RecipeList.rename_recipe(recipe.id, "RecipeNuova") ==
                {:ok, %Recipe{recipe | name: "RecipeNuova"}}
 
-      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> :not_found end)
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> {:error, :not_found} end)
 
       assert Relix.RecipeList.rename_recipe(42, "RecipeNuova") ==
                {:error, :not_found}
@@ -103,7 +103,7 @@ defmodule Relix.RecipeListTest do
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{"1" => "2"}) |> elem(1)
 
-      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> recipe end)
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> {:ok, recipe} end)
 
       {:ok, recipe} = Relix.RecipeList.add_or_update_item(recipe.id, "A", "B")
 
@@ -112,7 +112,7 @@ defmodule Relix.RecipeListTest do
     end
 
     test "recipe not found" do
-      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> :not_found end)
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> {:error, :not_found} end)
       assert Relix.RecipeList.add_or_update_item(42, "A", "B") == {:error, :not_found}
     end
 
@@ -121,7 +121,7 @@ defmodule Relix.RecipeListTest do
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{"1" => "2"}) |> elem(1)
 
-      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> recipe end)
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> {:ok, recipe} end)
 
       {:ok, recipe} = Relix.RecipeList.add_or_update_item(recipe.id, "1", "42")
 
@@ -133,7 +133,7 @@ defmodule Relix.RecipeListTest do
 
       recipe = Relix.RecipeList.new_recipe("Recipe1", "RECIPE", %{"1" => "2"}) |> elem(1)
 
-      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> recipe end)
+      stub(RecipeStoreBehaviourMock, :get_recipe_by_id, fn _ -> {:ok, recipe} end)
 
       {:ok, recipe} = Relix.RecipeList.delete_item(recipe.id, "NOTEXISTENT")
 

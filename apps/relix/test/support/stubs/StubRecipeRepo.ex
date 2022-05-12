@@ -14,7 +14,7 @@ defmodule Relix.StubRecipeStore do
 
   @impl Relix.RecipeStore.Behaviour
   def get_recipe_by_id(_id) do
-    %Relix.Recipe{}
+    {:ok, %Relix.Recipe{}}
   end
 
   @impl Relix.RecipeStore.Behaviour

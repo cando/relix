@@ -8,7 +8,9 @@ defmodule RelixWeb.Router do
   scope "/api", RelixWeb do
     pipe_through :api
 
-    resources "/recipes", RecipeController, except: [:new, :edit]
+    resources "/recipes", RecipeController, except: [:new, :edit] do
+      resources "/items", RecipeItemController, except: [:new, :edit]
+    end
   end
 
   # Enables LiveDashboard only for development

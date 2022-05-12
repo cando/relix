@@ -35,9 +35,9 @@ defmodule Relix.PostegresRecipeStoreIntegrationTest do
   @tag :database
   test "get recipe by id" do
     {:ok, persisted} = PostgresStore.insert(Recipe.new(1, "Recipe1", "RECIPE", %{}) |> elem(1))
-    assert PostgresStore.get_recipe_by_id(persisted.id) == persisted
+    assert PostgresStore.get_recipe_by_id(persisted.id) |> elem(1) == persisted
 
-    assert PostgresStore.get_recipe_by_id(42) == :not_found
+    assert PostgresStore.get_recipe_by_id(42) |> elem(1) == :not_found
   end
 
   @tag :database
