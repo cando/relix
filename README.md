@@ -30,6 +30,7 @@ docker-compose run --rm -e "MIX_ENV=test" web mix test && docker-compose down
 # TODO
 
 - Finish GraphQl implementation:
+    - add test suite
     - add/update/delete items (add also inline when creating a new recipe)
     - delete recipe
     - rename recipe
