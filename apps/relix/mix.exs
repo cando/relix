@@ -31,16 +31,18 @@ defmodule Relix.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:mox, "~> 1.0", only: :test},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:benchee, "~> 1.0", only: :dev}
     ]
   end
 
   defp aliases do
     [
+      setup: ["ecto.drop", "ecto.create", "ecto.migrate"],
       test: [
-        "ecto.drop --quiet",
-        "ecto.create --quiet",
-        "ecto.migrate --quiet",
+        "ecto.drop ",
+        "ecto.create",
+        "ecto.migrate",
         "test --include database"
       ]
     ]
