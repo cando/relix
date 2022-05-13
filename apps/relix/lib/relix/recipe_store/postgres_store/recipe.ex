@@ -21,7 +21,7 @@ defmodule Relix.RecipeStore.PostgresStore.Recipe do
     field :type, :string
     field :version, :integer
     field :state, Ecto.Enum, values: [:draft, :approved]
-    has_many :items, PostgresStore.RecipeItem, on_replace: :delete
+    has_many :items, PostgresStore.RecipeItem, on_replace: :delete_if_exists
   end
 
   def changeset(recipe, params \\ %{}) do
