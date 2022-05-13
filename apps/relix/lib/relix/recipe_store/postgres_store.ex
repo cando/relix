@@ -23,7 +23,8 @@ defmodule Relix.RecipeStore.PostgresStore do
 
   @impl Relix.RecipeStore.Behaviour
   def update(recipe) do
-    %PostgresStore.Recipe{id: recipe.id}
+    PostgresStore.Repo.get(PostgresStore.Recipe, recipe.id)
+    |> PostgresStore.Repo.preload([:items])
     |> PostgresStore.Recipe.changeset(domain_recipe_to_postgres(recipe))
     |> PostgresStore.Repo.update()
     |> case do

@@ -17,11 +17,11 @@ defmodule Relix.RecipeStore.PostgresStore.Recipe do
         }
 
   schema "recipes" do
-    field(:name, :string)
-    field(:type, :string)
-    field(:version, :integer)
-    field(:state, Ecto.Enum, values: [:draft, :approved])
-    has_many(:items, PostgresStore.RecipeItem)
+    field :name, :string
+    field :type, :string
+    field :version, :integer
+    field :state, Ecto.Enum, values: [:draft, :approved]
+    has_many :items, PostgresStore.RecipeItem, on_replace: :delete
   end
 
   def changeset(recipe, params \\ %{}) do

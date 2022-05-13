@@ -69,4 +69,52 @@ defmodule Relix.PostegresRecipeStoreIntegrationTest do
     assert updated.items == %{"mah" => "si"}
     assert updated.id == persisted.id
   end
+
+  test "delete recipe item" do
+    {:ok, persisted} =
+      PostgresStore.insert(
+        Recipe.new(1, "Recipe1", "RECIPE", %{"1" => "2", "3" => "4"})
+        |> elem(1)
+      )
+
+    {:ok, _} =
+      PostgresStore.update(%PostgresStore.Recipe{
+        id: persisted.id,
+        name: "ciccio",
+        type: "RECIPE",
+        state: :draft,
+        version: 1,
+        items: %{"3" => "4"}
+      })
+
+    {:ok, persisted} = PostgresStore.get_recipe_by_id(persisted.id)
+
+    assert persisted.name == "ciccio"
+    assert persisted.items == %{"3" => "4"}
+    assert persisted.id == persisted.id
+  end
+
+  test "edit recipe item" do
+    {:ok, persisted} =
+      PostgresStore.insert(
+        Recipe.new(1, "Recipe1", "RECIPE", %{"1" => "2"})
+        |> elem(1)
+      )
+
+    {:ok, _} =
+      PostgresStore.update(%PostgresStore.Recipe{
+        id: persisted.id,
+        name: "ciccio",
+        type: "RECIPE",
+        state: :draft,
+        version: 1,
+        items: %{"1" => "new_val"}
+      })
+
+    {:ok, persisted} = PostgresStore.get_recipe_by_id(persisted.id)
+
+    assert persisted.name == "ciccio"
+    assert persisted.items == %{"1" => "new_val"}
+    assert persisted.id == persisted.id
+  end
 end
