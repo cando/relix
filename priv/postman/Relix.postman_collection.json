@@ -342,7 +342,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  recipe(id: 1){\n    id\n    version\n    state\n    items {\n      id\n      value\n    }\n  }\n}",
+								"query": "query {\n  recipe(id: 1){\n    id\n    name\n    version\n    state\n    items {\n      id\n      value\n    }\n  }\n}",
 								"variables": ""
 							}
 						},
@@ -427,7 +427,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "mutation deleteRecipeItem($recipe_id: ID!, $item_id: String!){\n    deleteRecipeItem(recipe_id: $recipe_id, item_id: $item_id) {\n      id\n    }\n  }",
-								"variables": "{\n    \"recipe_id\" : 1,\n    \"item_id\" : \"item1\"\n}"
+								"variables": "{\n    \"recipe_id\" : 1,\n    \"item_id\" : \"1\"\n}"
 							}
 						},
 						"url": {
@@ -454,7 +454,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation {\n  renameRecipe(id: 12, name: \"ciccio\") {\n    id\n  }\n}",
+								"query": "mutation {\n  renameRecipe(id: 1, name: \"ciccio\") {\n    id\n  }\n}",
 								"variables": ""
 							}
 						},
@@ -483,7 +483,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "mutation approveRecipe($id: ID!){\n    approveRecipe(id: $id) {\n      id,\n      state\n    }\n  }",
-								"variables": "{\n    \"id\" : 8\n}"
+								"variables": "{\n    \"id\" : 1\n}"
 							}
 						},
 						"url": {
@@ -511,7 +511,7 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "mutation addOrUpdateRecipeItem($recipe_id: ID!, $item_id: String!, $item_value: String!){\n    addOrUpdateRecipeItem(recipe_id: $recipe_id, item_id: $item_id, item_value: $item_value) {\n      id,\n      items {\n        id\n        value\n      }\n    }\n  }",
-								"variables": "{\n    \"recipe_id\" : 1,\n    \"item_id\" : \"yee\",\n    \"item_value\" : \"blah\"\n\n}"
+								"variables": "{\n    \"recipe_id\" : 1,\n    \"item_id\" : \"yee\",\n    \"item_value\" : \"asdsadadas\"\n\n}"
 							}
 						},
 						"url": {
