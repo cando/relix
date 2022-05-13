@@ -16,4 +16,9 @@ defmodule RelixWeb.GraphQl.Schema.RecipeTypes do
     field :items, list_of(:recipe_item)
     field :state, non_null(:string)
   end
+
+  input_object :recipe_item_input do
+    field :id, non_null(:string)
+    field :value, non_null(:string)
+  end
 end
