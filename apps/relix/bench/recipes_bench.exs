@@ -6,10 +6,15 @@
 # Note: the +P 2000000 sets maximum number of processes to 2 million
 
 defmodule LoadTest do
-  @total_processes 1_000_000
+  @total_processes 10_000
 
   def run do
 
+    # warmup
+    Relix.RecipeList.new_recipe("WARM", "WARM")
+    Relix.RecipeList.get_recipe_by_id(1)
+
+    # real test
     res =
     for id <- 1..@total_processes do
       Task.async(fn ->
@@ -22,7 +27,7 @@ defmodule LoadTest do
     end
     |> Task.await_many()
     avg = Enum.sum(res) / length(res)
-    IO.puts("average put #{avg} μs")
+    IO.puts("average new_recipe #{avg} μs")
 
     res =
     for id <- 1..@total_processes do
@@ -36,7 +41,7 @@ defmodule LoadTest do
     end
     |> Task.await_many()
     avg = Enum.sum(res) / length(res)
-    IO.puts("average get #{avg} μs")
+    IO.puts("average get_recipe #{avg} μs")
   end
 end
 

@@ -1,6 +1,6 @@
 import Config
 
-config :relix, :recipe_store, Relix.RecipeStore.EtsStore
+config :relix, :recipe_store, Relix.RecipeStore.InMemoryStore
 config :logger, level: :warn
 
 config :relix, Relix.RecipeStore.PostgresStore.Repo,
