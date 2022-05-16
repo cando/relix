@@ -1,6 +1,6 @@
 import Config
 
-config :relix, :recipe_store, Relix.RecipeStore.PostgresStore
+config :relix, :recipe_store, Relix.RecipeStore.EtsStore
 config :logger, level: :warn
 
 config :relix, Relix.RecipeStore.PostgresStore.Repo,
@@ -8,4 +8,4 @@ config :relix, Relix.RecipeStore.PostgresStore.Repo,
   password: System.get_env("PGPASSWORD", "postgres"),
   hostname: System.get_env("PGHOST", "localhost"),
   database: "db_relix_bench",
-  pool_size: 10
+  pool_size: 100

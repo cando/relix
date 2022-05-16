@@ -6,7 +6,7 @@
 # Note: the +P 2000000 sets maximum number of processes to 2 million
 
 defmodule LoadTest do
-  @total_processes 1000
+  @total_processes 1_000_000
 
   def run do
 
@@ -23,6 +23,20 @@ defmodule LoadTest do
     |> Task.await_many()
     avg = Enum.sum(res) / length(res)
     IO.puts("average put #{avg} μs")
+
+    res =
+    for id <- 1..@total_processes do
+      Task.async(fn ->
+        {time, _} = :timer.tc(fn ->
+          Relix.RecipeList.get_recipe_by_id(id)
+        end)
+        time
+      end
+      )
+    end
+    |> Task.await_many()
+    avg = Enum.sum(res) / length(res)
+    IO.puts("average get #{avg} μs")
   end
 end
 
