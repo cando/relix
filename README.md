@@ -27,10 +27,4 @@ The web api service will be listening at http://localhost:4000/api (REST) and ht
 docker-compose run --rm -e "MIX_ENV=test" web mix test && docker-compose down
 ```
 
-# TODO
-
-- Benchee:
-    - app performance under various load (beam, rest, graphql)
-    - evaluate different agent architecture (spawn more?)
-
 
