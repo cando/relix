@@ -3,11 +3,6 @@ defmodule Relix.RecipeStore do
 
   @behaviour Relix.RecipeStore.Behaviour
 
-  @doc false
-  def child_spec(opts) do
-    Supervisor.child_spec(Module.concat(impl(), Supervisor), opts)
-  end
-
   @impl Relix.RecipeStore.Behaviour
   @spec insert(recipe :: Relix.Recipe.t()) :: {:ok, Relix.Recipe.t()} | {:error, any()}
   def insert(recipe) do

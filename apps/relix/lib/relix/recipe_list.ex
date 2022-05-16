@@ -2,23 +2,9 @@ defmodule Relix.RecipeList do
   @moduledoc """
   The module used to handle Recipe objects
   """
-  use Supervisor
 
   alias Relix.Recipe
   alias Relix.RecipeStore
-
-  def start_link(init_arg) do
-    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
-  end
-
-  @impl true
-  def init(_init_arg) do
-    children = [
-      RecipeStore
-    ]
-
-    Supervisor.init(children, strategy: :one_for_one)
-  end
 
   @spec new_recipe(String.t(), String.t(), map) ::
           {:error, :validation_error} | {:ok, Relix.Recipe.t()}
