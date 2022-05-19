@@ -15,6 +15,11 @@ defmodule RelixWeb.RecipeItemControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json"), recipe: recipe}
   end
 
+  setup_all _ do
+    # TODO question for Paolo!
+    Application.put_env(:relix, :recipe_list, Relix.RecipeList)
+  end
+
   describe "index" do
     test "lists all recipe items", %{conn: conn, recipe: %Recipe{id: recipe_id}} do
       conn = get(conn, Routes.recipe_recipe_item_path(conn, :index, recipe_id))

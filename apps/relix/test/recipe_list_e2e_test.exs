@@ -1,4 +1,4 @@
-defmodule Relix.RecipeListIntegrationTest do
+defmodule Relix.RecipeListE2ETest do
   use Relix.RecipeRepoCase
 
   setup_all _ do
