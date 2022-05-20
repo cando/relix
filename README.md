@@ -3,6 +3,8 @@
 A simple SQL-backed recipe manager system.
 Developed for educational purposes and to practice/study Elixir, Phoenix, Docker, TDD, GraphQL and hexagonal architectures.
 
+A (pharma automation) recipe is defined as a list of ingredients, in the form of key-value pairs and is identified by a name and a type; a recipe has a state and a version and follows a life cycle.
+
 Hex architecture references:
 - https://jmgarridopaz.github.io/content/hexagonalarchitecture.html
 - https://alistair.cockburn.us/hexagonal-architecture/
